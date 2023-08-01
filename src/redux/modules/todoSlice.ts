@@ -10,19 +10,27 @@ export interface Todo {
 
 interface TodoState {
   todos: Todo[];
+  detailTodo: Todo | null;
 }
 
-// const initialState: Todo[] = [] 이렇게만 하면 안 되는 걸까요?
-// 위에 처럼 쓰면 return 해줘야 함 immer 요놈을 잘 활용하려면 TodoState를 만들어주는 것이 좋겠음
+const initialTodos = [
+  {
+    id: shortid.generate(),
+    title: "타입스크립트 공부하기",
+    content: "타입스크립트로 투두리스트를 만들어보자!",
+    isDone: false,
+  },
+  {
+    id: shortid.generate(),
+    title: "리액트 공부하기",
+    content: "정예반 3번째 과제 하기",
+    isDone: false,
+  },
+];
+
 const initialState: TodoState = {
-  todos: [
-    {
-      id: shortid.generate(),
-      title: "배고파요 ",
-      content: "집에 갈래요",
-      isDone: false,
-    },
-  ],
+  todos: initialTodos,
+  detailTodo: null,
 };
 
 export const todoSlice = createSlice({
@@ -53,8 +61,12 @@ export const todoSlice = createSlice({
         } else return todo;
       });
     },
+    setTodo: (state, action: PayloadAction<Todo>) => {
+      state.detailTodo = action.payload;
+    },
   },
 });
 
-export const { addTodo, deleteTodo, toggleTodo, editTodo } = todoSlice.actions;
+export const { addTodo, deleteTodo, toggleTodo, editTodo, setTodo } =
+  todoSlice.actions;
 export default todoSlice.reducer;
