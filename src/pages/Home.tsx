@@ -1,30 +1,24 @@
 import { useState } from "react";
-import Header from "../components/Layout/Header";
-import Input from "../components/Input";
 import TodoList from "../components/TodoList";
 import Detail from "../components/Detail";
 import Default from "../components/Layout/Default";
-import { styled } from "styled-components";
-import { useAppSelector } from "../hooks";
+import { Todo } from "../axios/api";
+import * as S from "../styles/StHome";
 
 const Home = () => {
-  const { detailTodo } = useAppSelector((state) => state.todos);
-
+  const [detailTodo, setDetailTodo] = useState<Todo | null>(null);
   return (
     <>
-      <MainContainer>
-        <TodoList />
-        {detailTodo ? <Detail /> : <Default />}
-      </MainContainer>
+      <S.MainContainer>
+        <TodoList setTodo={setDetailTodo} />
+        {detailTodo ? (
+          <Detail todo={detailTodo} setTodo={setDetailTodo} />
+        ) : (
+          <Default />
+        )}
+      </S.MainContainer>
     </>
   );
 };
 
 export default Home;
-
-const MainContainer = styled.div`
-  width: 1400px;
-  height: 900px;
-  display: flex;
-  justify-content: center;
-`;

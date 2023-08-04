@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../hooks";
-import shortid from "shortid";
-import { addTodo } from "../redux/modules/todoSlice";
-import * as S from "../styles/StyleInput";
-import { useNavigate } from "react-router-dom";
+import * as S from "../styles/StInput";
+import { useMutation, useQueryClient } from "react-query";
+import { Todo, addTodo } from "../axios/api";
 
 interface InputProps {
   isOpen: boolean;
@@ -11,8 +9,6 @@ interface InputProps {
 }
 
 const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
@@ -23,19 +19,26 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     setContent(event.target.value);
   };
 
+  // Todo 추가
+  const queryClient = useQueryClient();
+  const addMutation = useMutation(addTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
   const addButton = () => {
-    const newTodo = {
-      id: shortid.generate(),
+    const newTodo: Omit<Todo, "id"> = {
       title,
       content,
       isDone: false,
     };
-    dispatch(addTodo(newTodo));
+    addMutation.mutate(newTodo);
     setTitle("");
     setContent("");
     setIsOpen(!isOpen);
   };
 
+  // 모달창 닫기
   const backButton = () => {
     setIsOpen(!isOpen);
   };

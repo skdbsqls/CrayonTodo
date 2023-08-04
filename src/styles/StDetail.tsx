@@ -3,8 +3,8 @@ import DetailImg from "../asset/Detailmg.png";
 import EditImg from "../asset/EditImg.png";
 import DeleteImg from "../asset/DeleteImg.png";
 import AddImg from "../asset/AddImg.png";
-import falseImg from "../asset/falseImg.png";
-import doneImg from "../asset/doneImg.png";
+import False from "../asset/False.png";
+import Done from "../asset/Done.png";
 
 export const DetailLayout = styled.div`
   width: 832px;
@@ -21,18 +21,6 @@ export const DetailContainer = styled.div`
   background-image: url(${DetailImg});
   background-size: cover;
   background-repeat: no-repeat;
-`;
-
-export const DetailBox = styled.div`
-  width: 700px;
-  height: 280px;
-  margin-left: 20px;
-  margin-top: 180px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const OpenModalContainer = styled.div`
@@ -54,27 +42,52 @@ export const OpenModal = styled.div`
   background-repeat: no-repeat;
 `;
 
-// const False = styled.div`
-//   width: 100px;
-//   height: 130px;
-//   background-image: url(${falseImg});
-//   background-size: cover;
-//   background-repeat: no-repeat;
-// `;
+export const FalseButton = styled.div`
+  width: 124px;
+  height: 80px;
+  margin-top: 120px;
+  margin-left: 580px;
+  background-image: url(${False});
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
+export const DoneButton = styled.div`
+  width: 94px;
+  height: 80px;
+  margin-top: 120px;
+  margin-left: 595px;
+  background-image: url(${Done});
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
+export const DetailBox = styled.div`
+  width: 700px;
+  height: 270px;
+  margin-left: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const Title = styled.div`
   font-size: 50px;
-  margin: 20px;
+  margin: 5px;
+  text-align: center;
 `;
 
 export const Content = styled.div`
   font-size: 35px;
-  margin: 20px;
+  margin: 5px;
+  text-align: center;
 `;
 
 export const EditInput = styled.input`
   width: 550px;
-  height: 70px;
+  height: 50px;
   margin-left: 20px;
   margin-bottom: 10px;
   padding: 5px;
@@ -89,7 +102,29 @@ export const EditInput = styled.input`
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 50px;
+  border-radius: 15px;
+  background-color: #fffed4;
+  outline: none;
+`;
+
+export const EditTextArea = styled.textarea`
+  width: 550px;
+  height: 100px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+  font-family: "KyoboHand";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/KyoboHand.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 20px;
   background-color: #fffed4;
   outline: none;
 `;
@@ -98,7 +133,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 320px;
+  margin-left: 340px;
 `;
 
 export const EditButton = styled.div`

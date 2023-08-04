@@ -1,21 +1,14 @@
-import styled from "styled-components";
 import Header from "./Header";
+import * as S from "../../styles/StLayout";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   return (
-    <LayoutContainer>
+    <S.LayoutContainer>
       <Header />
       <Outlet />
-    </LayoutContainer>
+    </S.LayoutContainer>
   );
 };
 
 export default Layout;
-
-const LayoutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;

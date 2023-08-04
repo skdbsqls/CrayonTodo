@@ -1,70 +1,82 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import * as S from "../styles/StDetail";
 import Input from "./Input";
-import {
-  Todo,
-  deleteTodo,
-  editTodo,
-  setTodo,
-  toggleTodo,
-} from "../redux/modules/todoSlice";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import * as S from "../styles/StyleDetail";
+import { Todo, deleteTodo, editTodo, toggleTodo } from "../axios/api";
+import { useMutation, useQueryClient } from "react-query";
 
-const Detail: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { detailTodo } = useAppSelector((state) => state.todos);
+interface DetailProps {
+  todo: Todo;
+  setTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
+}
+
+const Detail: React.FC<DetailProps> = ({ todo, setTodo }) => {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [editTitle, editSetTitle] = useState<string>("");
+  const [editTitle, setEditTitle] = useState<string>("");
   const [editContent, setEditContent] = useState<string>("");
-
   const onChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    editSetTitle(event.target.value);
+    setEditTitle(event.target.value);
   };
   const onChangeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEditContent(event.target.value);
   };
 
-  useEffect(() => {
-    if (isEdit) {
-      editSetTitle(detailTodo?.title as string);
-      setEditContent(detailTodo?.content as string);
-    }
-  }, [isEdit]);
-
+  // Input 모달
   const openModal = () => {
     setIsOpen(!isOpen);
   };
 
-  const editButton = (todo: Todo) => {
-    console.log("todo", todo);
-    if (isEdit) {
-      setIsEdit(!isEdit);
+  // Todo 삭제
+  const deleteMutation = useMutation(deleteTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
+  const deleteButton = (id: number): void => {
+    alert("진짜 삭제할거야?");
+    deleteMutation.mutate(id);
+    setTodo(null);
+  };
 
+  // Todo 수정
+  const editMutation = useMutation(editTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
+  const editButton = (todo: Todo) => {
+    setIsEdit(!isEdit);
+    if (!isEdit) {
+      setEditTitle(todo?.title);
+      setEditContent(todo?.content);
+    } else {
       const editedTodo = {
         ...todo,
         title: editTitle,
         content: editContent,
       };
-
-      dispatch(editTodo(editedTodo));
-      dispatch(setTodo(editedTodo));
-    } else {
+      editMutation.mutate(editedTodo);
+      setTodo(editedTodo);
       setIsEdit(!isEdit);
     }
   };
 
-  const deleteButton = (id: string): void => {
-    dispatch(deleteTodo(id));
+  // Todo 토글
+  const updateMutation = useMutation(toggleTodo, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
+  const toggleButton = (todo: Todo): void => {
+    const updatedTodo = {
+      ...todo,
+      isDone: !todo.isDone,
+    };
+    updateMutation.mutate(updatedTodo);
+    setTodo(updatedTodo);
   };
 
-  const toggleButton = (id: string): void => {
-    dispatch(toggleTodo(id));
-  };
-
-  if (!detailTodo) {
-    return <div>투두 없음</div>;
-  }
   return (
     <>
       {isOpen && <Input isOpen={isOpen} setIsOpen={setIsOpen} />}
@@ -74,11 +86,12 @@ const Detail: React.FC = () => {
           <S.OpenModalComment>임무를 작성하라!</S.OpenModalComment>
         </S.OpenModalContainer>
         <S.DetailContainer>
+          {todo.isDone ? (
+            <S.FalseButton onClick={() => toggleButton(todo)} />
+          ) : (
+            <S.DoneButton onClick={() => toggleButton(todo)} />
+          )}
           <S.DetailBox>
-            {/* <div onClick={() => toggleButton(todo.id)}>
-            {todo.isDone ? "임수를 완수했다!" : "임수를 수행하라!"}
-          </div> */}
-            {/* <False></False> */}
             {isEdit ? (
               <>
                 <S.EditInput value={editTitle} onChange={onChangeTitle} />
@@ -86,16 +99,16 @@ const Detail: React.FC = () => {
               </>
             ) : (
               <>
-                <S.Title>{detailTodo.title}</S.Title>
-                <S.Content>{detailTodo.content}</S.Content>
+                <S.Title>{todo.title}</S.Title>
+                <S.Content>{todo.content}</S.Content>
               </>
             )}
           </S.DetailBox>
           <S.ButtonContainer>
-            <S.EditButton onClick={() => editButton(detailTodo)}>
+            <S.EditButton onClick={() => editButton(todo)}>
               {isEdit ? "저장" : "수정"}
             </S.EditButton>
-            <S.DeleteButton onClick={() => deleteButton(detailTodo.id)}>
+            <S.DeleteButton onClick={() => deleteButton(todo.id)}>
               삭제
             </S.DeleteButton>
           </S.ButtonContainer>

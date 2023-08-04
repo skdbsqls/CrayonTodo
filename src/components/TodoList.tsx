@@ -1,25 +1,42 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { RootState } from "../redux/config/configStore";
-import { Todo, setTodo } from "../redux/modules/todoSlice";
-import * as S from "../styles/StyleTodoList";
+import { Todo } from "../axios/api";
+import * as S from "../styles/StTodoList";
+import { useQuery } from "react-query";
+import { getTodos } from "../axios/api";
 
-const TodoList: React.FC = () => {
-  const { todos } = useAppSelector((state: RootState) => state.todos);
-  const dispatch = useAppDispatch();
+interface TodoListProps {
+  setTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
+}
 
-  const datailButton = (todo: Todo): void => {
-    dispatch(setTodo(todo));
+const TodoList: React.FC<TodoListProps> = ({ setTodo }) => {
+  // 디테일 페이지 보여주기
+  const navigateDetail = (todo: Todo): void => {
+    setTodo(todo);
   };
 
+  // Todos 조회
+  const {
+    isLoading,
+    isError,
+    data: todos = [],
+  } = useQuery<Todo[]>("todos", getTodos);
+
+  if (isLoading) {
+    return <h1>로딩중입니다</h1>;
+  }
+  if (isError) {
+    return <h1>오류 발생</h1>;
+  }
   return (
     <S.ListContainer>
       {todos.map((todo, index) => {
         return (
-          <div key={todo.id} style={index % 2 ? { marginLeft: "38px" } : {}}>
-            <S.TodoTitle onClick={() => datailButton(todo)}>
-              {todo.title}
-            </S.TodoTitle>
+          <div
+            key={todo.id}
+            onClick={() => navigateDetail(todo)}
+            style={index % 2 ? { marginLeft: "38px" } : {}}
+          >
+            <S.TodoTitle>{todo.title}</S.TodoTitle>
           </div>
         );
       })}

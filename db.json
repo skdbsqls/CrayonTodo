@@ -1,0 +1,16 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "타입스크립트 공부하기",
+      "content": "타입스크립트로 투두리스트를 만들어보자!",
+      "isDone": false
+    },
+    {
+      "id": 2,
+      "title": "리액트 공부하기",
+      "content": "정예반 4번째 과제 하기",
+      "isDone": false
+    }
+  ]
+}
