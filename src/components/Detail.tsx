@@ -47,6 +47,13 @@ const Detail: React.FC<DetailProps> = ({ todo, setTodo }) => {
   });
   const editButton = (todo: Todo) => {
     setIsEdit(!isEdit);
+    // 유효성 검사
+    if (editTitle.length >= 12) {
+      return alert("제목은 12글자 이하로 입력해주세요");
+    }
+    if (editContent.length >= 50) {
+      return alert("내용은 50글자 이하로 입력해주세요");
+    }
     if (!isEdit) {
       setEditTitle(todo?.title);
       setEditContent(todo?.content);

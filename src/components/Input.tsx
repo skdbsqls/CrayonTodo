@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as S from "../styles/StInput";
-import { useMutation, useQueryClient } from "react-query";
-import { Todo, addTodo } from "../axios/api";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Todo, addTodo, getTodos } from "../axios/api";
 
 interface InputProps {
   isOpen: boolean;
@@ -19,6 +19,9 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     setContent(event.target.value);
   };
 
+  // Todo 조회
+  const { data: todos = [] } = useQuery<Todo[]>("todos", getTodos);
+
   // Todo 추가
   const queryClient = useQueryClient();
   const addMutation = useMutation(addTodo, {
@@ -27,6 +30,16 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     },
   });
   const addButton = () => {
+    // 유효성 검사
+    if (!title || !content) {
+      return alert("제목과 내용을 모두 입력해주세요");
+    }
+    if (title.length >= 12) {
+      return alert("내용은 12글자 이하로 입력해주세요");
+    }
+    if (content.length >= 50) {
+      return alert("제목은 50글자 이하로 입력해주세요");
+    }
     const newTodo: Omit<Todo, "id"> = {
       title,
       content,
@@ -36,6 +49,11 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     setTitle("");
     setContent("");
     setIsOpen(!isOpen);
+
+    // Todo 개수 설정
+    if (todos.length >= 8) {
+      return alert("짱구의 크레파스는 8개!");
+    }
   };
 
   // 모달창 닫기
