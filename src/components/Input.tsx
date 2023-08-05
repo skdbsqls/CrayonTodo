@@ -30,6 +30,12 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     },
   });
   const addButton = () => {
+    // Todo 개수 설정
+    if (todos.length >= 8) {
+      alert("짱구의 크레파스는 8개!");
+      setIsOpen(!isOpen);
+      return false;
+    }
     // 유효성 검사
     if (!title || !content) {
       return alert("제목과 내용을 모두 입력해주세요");
@@ -49,11 +55,6 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
     setTitle("");
     setContent("");
     setIsOpen(!isOpen);
-
-    // Todo 개수 설정
-    if (todos.length >= 8) {
-      return alert("짱구의 크레파스는 8개!");
-    }
   };
 
   // 모달창 닫기
@@ -66,9 +67,17 @@ const Input: React.FC<InputProps> = ({ isOpen, setIsOpen }) => {
       <S.InputBox>
         <S.StButton onClick={backButton}>X</S.StButton>
         제목
-        <S.StInput value={title} onChange={onChangeTitle} />
+        <S.StInput
+          value={title}
+          onChange={onChangeTitle}
+          placeholder="12글자 이하"
+        />
         내용
-        <S.StTextArea value={content} onChange={onChangeContent} />
+        <S.StTextArea
+          value={content}
+          onChange={onChangeContent}
+          placeholder="50글자 이하"
+        />
         <S.StButton onClick={addButton}>추가</S.StButton>
       </S.InputBox>
     </S.InputContainer>
